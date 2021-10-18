@@ -16,7 +16,15 @@ add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 add_dependencies(SDL2_image SDL2)
 
-add_executable( ${PROJECT_NAME} ${SRCS} )
+if (WIN32)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_executable( ${PROJECT_NAME} ${SRCS} )
+    else()
+        add_executable( ${PROJECT_NAME} WIN32 ${SRCS} )
+    endif()
+else()
+    add_executable( ${PROJECT_NAME} ${SRCS} )
+endif()
 
 target_link_libraries( ${PROJECT_NAME} PUBLIC 
     SDL2
