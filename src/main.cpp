@@ -4,16 +4,16 @@
 #include "render.h"
 #include "types.h"
 
-#include <iostream>
+#include <SDL_image.h>
 
 using namespace KeyPet;
 
 int main(int argc, char *argv[]) {
-  std::cout << "Starting SDL...\n";
   const char *AppName = "KeyPet";
 
   /* init SDL, window, and renderer */
   SDL &sdl = SDL::get(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+  SDLImg &sdlImg = SDLImg::get(IMG_INIT_PNG);
 
   Rect screenSize = getCurrentScreenSize(0);
   const int width = 640;
@@ -25,12 +25,19 @@ int main(int argc, char *argv[]) {
   SDLWindow window{AppName, x, y, width, height, winFlags};
   SDLRenderer renderer{window.get(), -1, SDL_RENDERER_ACCELERATED};
 
+  SDLTexture uchan{renderer.get(),
+                   "data/sprites/unitychan/Unitychan_Idle_1.png"};
+
   /* main loop */
   Context ctx = {};
   bool loop = true;
   while (loop) {
 
     render(renderer);
+
+    SDL_Rect dstRect = {width / 2, height / 2, uchan.getWidth(),
+                        uchan.getHeight()};
+    SDL_RenderCopy(renderer.get(), uchan.get(), nullptr, &dstRect);
 
     int signal = eventHandler(&ctx);
     if (signal == EventSignal_Quit)

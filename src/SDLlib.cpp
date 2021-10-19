@@ -1,4 +1,5 @@
 #include "SDLlib.h"
+#include <SDL_image.h>
 #include <stdexcept>
 
 namespace KeyPet {
@@ -15,6 +16,19 @@ SDL::SDL(uint32_t flags) {
 }
 
 SDL::~SDL() { SDL_Quit(); }
+
+/* SDLImg */
+SDLImg &SDLImg::get(int flags) {
+  static SDLImg instance{flags};
+  return instance;
+}
+
+SDLImg::SDLImg(int flags) {
+  if (IMG_Init(flags) == 0)
+    throw std::runtime_error("Error initializing SDL Image.");
+}
+
+SDLImg::~SDLImg() { IMG_Quit(); }
 
 /* SDLWindow */
 SDLWindow::SDLWindow(const char *name, int x, int y, int width, int height,
@@ -45,5 +59,30 @@ SDLRenderer::~SDLRenderer() {
 }
 
 SDL_Renderer *SDLRenderer::get() { return Renderer; }
+
+/* SDLTexture */
+SDLTexture::SDLTexture(SDL_Renderer *renderer, const char *fileName)
+    : Texture(nullptr), Name(fileName) {
+  Texture = IMG_LoadTexture(renderer, fileName);
+  if (!Texture)
+    throw std::runtime_error(std::string("Failed to load texture from ") +
+                             fileName);
+
+  Info = {0};
+
+  if (SDL_QueryTexture(Texture, &Info.format, &Info.access, &Info.width,
+                       &Info.height))
+    throw std::runtime_error(std::string("Failed to query texture info from ") +
+                             Name);
+}
+
+SDLTexture::~SDLTexture() {
+  if (Texture)
+    SDL_DestroyTexture(Texture);
+}
+
+SDL_Texture *SDLTexture::get() { return Texture; }
+int SDLTexture::getWidth() const { return Info.width; }
+int SDLTexture::getHeight() const { return Info.height; }
 
 } // namespace KeyPet

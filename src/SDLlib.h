@@ -2,6 +2,7 @@
 #define __SDL_lib_H__
 
 #include <SDL.h>
+#include <string>
 
 namespace KeyPet {
 
@@ -16,6 +17,19 @@ private:
 public:
   SDL(SDL const &) = delete;
   void operator=(SDL const &) = delete;
+};
+
+class SDLImg {
+public:
+  static SDLImg &get(int flags = 0);
+  ~SDLImg();
+
+private:
+  SDLImg(int flags);
+
+public:
+  SDLImg(SDLImg const &) = delete;
+  void operator=(SDLImg const &) = delete;
 };
 
 class SDLWindow {
@@ -54,6 +68,28 @@ private:
 
 public:
   SDL_Renderer *get();
+};
+
+class SDLTexture {
+public:
+  struct TextureInfo {
+    uint32_t format;
+    int access;
+    int width;
+    int height;
+  };
+
+  SDLTexture(SDL_Renderer *renderer, const char *fileName);
+  ~SDLTexture();
+
+  SDL_Texture *get();
+  int getWidth() const;
+  int getHeight() const;
+
+private:
+  std::string Name;
+  SDL_Texture *Texture;
+  TextureInfo Info;
 };
 
 } // namespace KeyPet
