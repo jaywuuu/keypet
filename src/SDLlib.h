@@ -1,5 +1,5 @@
-#ifndef __SDL_LIB_H__
-#define __SDL_LIB_H__
+#ifndef __SDL_lib_H__
+#define __SDL_lib_H__
 
 #include <SDL.h>
 
@@ -58,4 +58,4 @@ public:
 
 } // namespace KeyPet
 
-#endif /* __SDL_LIB_H__ */
+#endif /* __SDL_lib_H__ */
