@@ -40,9 +40,9 @@ public:
 
   // for now let's just delete copy and move.
   SDLWindow(const SDLWindow &) = delete;            // delete copy
-  SDLWindow &operator=(const SDLWindow &) = delete; // delete assignment
-  SDLWindow(SDLWindow &&) = delete;                 // delete move
-  SDLWindow &operator=(SDLWindow &&) = delete;      // delete assignment move
+  SDLWindow &operator=(const SDLWindow &) = delete; // delete copy assignment
+  SDLWindow(SDLWindow &&) = default;                // default move
+  SDLWindow &operator=(SDLWindow &&) = default;     // default move assignment
 
 private:
   SDL_Window *Window;
@@ -57,10 +57,11 @@ public:
   ~SDLRenderer();
 
   // for now let's just delete copy and move.
-  SDLRenderer(const SDLRenderer &) = delete;            // delete copy
-  SDLRenderer &operator=(const SDLRenderer &) = delete; // delete assignment
-  SDLRenderer(SDLRenderer &&) = delete;                 // delete move
-  SDLRenderer &operator=(SDLRenderer &&) = delete; // delete assignment move
+  SDLRenderer(const SDLRenderer &) = delete; // delete copy
+  SDLRenderer &
+  operator=(const SDLRenderer &) = delete;          // delete copy assignment
+  SDLRenderer(SDLRenderer &&) = default;            // default move
+  SDLRenderer &operator=(SDLRenderer &&) = default; // default move assignment
 
 private:
   SDL_Window *Window;
@@ -81,6 +82,11 @@ public:
 
   SDLTexture(SDL_Renderer *renderer, const char *fileName);
   ~SDLTexture();
+
+  SDLTexture(const SDLTexture &) = delete;            // delete copy
+  SDLTexture &operator=(const SDLTexture &) = delete; // delete copy assignment
+  SDLTexture(SDLTexture &&) = default;                // default move
+  SDLTexture &operator=(SDLTexture &&) = default;     // default move assignment
 
   SDL_Texture *get();
   int getWidth() const;
