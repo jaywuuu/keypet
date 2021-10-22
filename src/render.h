@@ -2,10 +2,11 @@
 #define __render_h__
 
 #include "SDLlib.h"
+#include "types.h"
 
 namespace KeyPet {
 
-void render(SDLRenderer &renderer);
+void render(Context &context, SDLRenderer &renderer);
 void present(SDLRenderer &renderer);
 
 } // namespace KeyPet

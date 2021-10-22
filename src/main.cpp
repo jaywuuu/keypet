@@ -8,6 +8,11 @@
 
 using namespace KeyPet;
 
+static SDL_HitTestResult HitTestCallback(SDL_Window *window,
+                                         const SDL_Point *area, void *data) {
+  return SDL_HITTEST_DRAGGABLE;
+}
+
 int main(int argc, char *argv[]) {
   const char *AppName = "KeyPet";
 
@@ -16,28 +21,38 @@ int main(int argc, char *argv[]) {
   SDLImg &sdlImg = SDLImg::get(IMG_INIT_PNG);
 
   Rect screenSize = getCurrentScreenSize(0);
-  const int width = 640;
-  const int height = 480;
+
+  SDLSurface uchanSurf{"data/sprites/unitychan/Unitychan_Idle_1.png"};
+
+  const int width = uchanSurf.get()->w;
+  const int height = uchanSurf.get()->h;
   const int x = screenSize.width - width;
   const int y = (screenSize.height - height) / 2;
 
   uint32_t winFlags = (SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
-  SDLWindow window{AppName, x, y, width, height, winFlags};
+  SDLShapedWindow window{AppName, x, y, width, height, winFlags};
   SDLRenderer renderer{window.get(), -1, SDL_RENDERER_ACCELERATED};
 
-  SDLTexture uchan{renderer.get(),
-                   "data/sprites/unitychan/Unitychan_Idle_1.png"};
+  SDLTexture uchanTex{renderer.get(), uchanSurf.get()};
+
+  SDL_WindowShapeMode mode = {};
+  if (SDL_ISPIXELFORMAT_ALPHA(uchanSurf.get()->format->format)) {
+    mode.mode = ShapeModeBinarizeAlpha;
+    mode.parameters.binarizationCutoff = 255;
+  } else {
+    mode.mode = ShapeModeColorKey;
+    mode.parameters.colorKey = SDL_Color{0, 0, 0, 0};
+  }
+
+  SDL_SetWindowShape(window.get(), uchanSurf.get(), &mode);
+  SDL_SetWindowHitTest(window.get(), HitTestCallback, nullptr);
 
   /* main loop */
-  Context ctx = {};
+  Context ctx = {uchanTex};
   bool loop = true;
   while (loop) {
 
-    render(renderer);
-
-    SDL_Rect dstRect = {width / 2, height / 2, uchan.getWidth(),
-                        uchan.getHeight()};
-    SDL_RenderCopy(renderer.get(), uchan.get(), nullptr, &dstRect);
+    render(ctx, renderer);
 
     int signal = eventHandler(&ctx);
     if (signal == EventSignal_Quit)

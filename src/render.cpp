@@ -6,9 +6,10 @@ using namespace KeyPet;
 
 namespace KeyPet {
 
-void render(SDLRenderer &renderer) {
-  SDL_SetRenderDrawColor(renderer.get(), 96, 128, 255, 255);
-  SDL_RenderClear(renderer.get());
+void render(Context &context, SDLRenderer &renderer) {
+  SDLTexture &pet = context.pet;
+  SDL_Rect dstRect = {0, 0, pet.getWidth(), pet.getHeight()};
+  SDL_RenderCopy(renderer.get(), pet.get(), nullptr, &dstRect);
 }
 
 void present(SDLRenderer &renderer) { SDL_RenderPresent(renderer.get()); }

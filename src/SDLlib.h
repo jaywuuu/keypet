@@ -38,11 +38,30 @@ public:
             uint32_t flags);
   ~SDLWindow();
 
-  // for now let's just delete copy and move.
   SDLWindow(const SDLWindow &) = delete;            // delete copy
   SDLWindow &operator=(const SDLWindow &) = delete; // delete copy assignment
   SDLWindow(SDLWindow &&) = default;                // default move
   SDLWindow &operator=(SDLWindow &&) = default;     // default move assignment
+
+private:
+  SDL_Window *Window;
+
+public:
+  SDL_Window *get();
+};
+
+class SDLShapedWindow {
+public:
+  SDLShapedWindow(const char *name, int x, int y, int width, int height,
+                  uint32_t flags);
+  ~SDLShapedWindow();
+
+  SDLShapedWindow(const SDLShapedWindow &) = delete; // delete copy
+  SDLShapedWindow &
+  operator=(const SDLShapedWindow &) = delete;   // delete copy assignment
+  SDLShapedWindow(SDLShapedWindow &&) = default; // default move
+  SDLShapedWindow &
+  operator=(SDLShapedWindow &&) = default; // default move assignment
 
 private:
   SDL_Window *Window;
@@ -56,7 +75,6 @@ public:
   SDLRenderer(SDL_Window *Win, int index, uint32_t flags);
   ~SDLRenderer();
 
-  // for now let's just delete copy and move.
   SDLRenderer(const SDLRenderer &) = delete; // delete copy
   SDLRenderer &
   operator=(const SDLRenderer &) = delete;          // delete copy assignment
@@ -71,6 +89,22 @@ public:
   SDL_Renderer *get();
 };
 
+class SDLSurface {
+public:
+  SDLSurface(const char *fileName);
+  ~SDLSurface();
+
+  SDLSurface(const SDLSurface &) = delete;            // delete copy
+  SDLSurface &operator=(const SDLSurface &) = delete; // delete copy assignment
+  SDLSurface(SDLSurface &&) = default;                // default move
+  SDLSurface &operator=(SDLSurface &&) = default;     // default move assignment
+
+  SDL_Surface *get();
+
+private:
+  SDL_Surface *Surface;
+};
+
 class SDLTexture {
 public:
   struct TextureInfo {
@@ -81,6 +115,7 @@ public:
   };
 
   SDLTexture(SDL_Renderer *renderer, const char *fileName);
+  SDLTexture(SDL_Renderer *renderer, SDL_Surface *surface);
   ~SDLTexture();
 
   SDLTexture(const SDLTexture &) = delete;            // delete copy

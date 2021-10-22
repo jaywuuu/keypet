@@ -46,6 +46,22 @@ SDLWindow::~SDLWindow() {
 
 SDL_Window *SDLWindow::get() { return Window; }
 
+/* SDLShapedWindow */
+SDLShapedWindow::SDLShapedWindow(const char *name, int x, int y, int width,
+                                 int height, uint32_t flags)
+    : Window(nullptr) {
+  Window = SDL_CreateShapedWindow(name, x, y, width, height, flags);
+  if (!Window)
+    throw std::runtime_error("Failed to create SDL Window.");
+}
+
+SDLShapedWindow::~SDLShapedWindow() {
+  if (Window)
+    SDL_DestroyWindow(Window);
+}
+
+SDL_Window *SDLShapedWindow::get() { return Window; }
+
 /* SDLRenderer */
 SDLRenderer::SDLRenderer(SDL_Window *Win, int index, uint32_t flags)
     : Window(Win), Renderer(nullptr) {
@@ -59,6 +75,21 @@ SDLRenderer::~SDLRenderer() {
 }
 
 SDL_Renderer *SDLRenderer::get() { return Renderer; }
+
+/* SDLSurface */
+SDLSurface::SDLSurface(const char *fileName) : Surface(nullptr) {
+  Surface = IMG_Load(fileName);
+  if (!Surface)
+    throw std::runtime_error(std::string("Failed to load surface from ") +
+                             fileName);
+}
+
+SDLSurface::~SDLSurface() {
+  if (Surface)
+    SDL_FreeSurface(Surface);
+}
+
+SDL_Surface *SDLSurface::get() { return Surface; }
 
 /* SDLTexture */
 SDLTexture::SDLTexture(SDL_Renderer *renderer, const char *fileName)
@@ -74,6 +105,19 @@ SDLTexture::SDLTexture(SDL_Renderer *renderer, const char *fileName)
                        &Info.height))
     throw std::runtime_error(std::string("Failed to query texture info from ") +
                              Name);
+}
+
+SDLTexture::SDLTexture(SDL_Renderer *renderer, SDL_Surface *surface)
+    : Texture(nullptr) {
+  Texture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (!Texture)
+    throw std::runtime_error("Failed to load texture from surface.");
+
+  Info = {0};
+
+  if (SDL_QueryTexture(Texture, &Info.format, &Info.access, &Info.width,
+                       &Info.height))
+    throw std::runtime_error("Failed to query texture info from surface.");
 }
 
 SDLTexture::~SDLTexture() {
