@@ -13,6 +13,20 @@ static SDL_HitTestResult HitTestCallback(SDL_Window *window,
   return SDL_HITTEST_DRAGGABLE;
 }
 
+static void setupWindow(SDL_Window *window, SDL_Surface *surface) {
+  SDL_WindowShapeMode mode = {};
+  if (SDL_ISPIXELFORMAT_ALPHA(surface->format->format)) {
+    mode.mode = ShapeModeBinarizeAlpha;
+    mode.parameters.binarizationCutoff = 255;
+  } else {
+    mode.mode = ShapeModeColorKey;
+    mode.parameters.colorKey = SDL_Color{0, 0, 0, 0};
+  }
+
+  SDL_SetWindowShape(window, surface, &mode);
+  SDL_SetWindowHitTest(window, HitTestCallback, nullptr);
+}
+
 int main(int argc, char *argv[]) {
   const char *AppName = "KeyPet";
 
@@ -35,17 +49,7 @@ int main(int argc, char *argv[]) {
 
   SDLTexture uchanTex{renderer.get(), uchanSurf.get()};
 
-  SDL_WindowShapeMode mode = {};
-  if (SDL_ISPIXELFORMAT_ALPHA(uchanSurf.get()->format->format)) {
-    mode.mode = ShapeModeBinarizeAlpha;
-    mode.parameters.binarizationCutoff = 255;
-  } else {
-    mode.mode = ShapeModeColorKey;
-    mode.parameters.colorKey = SDL_Color{0, 0, 0, 0};
-  }
-
-  SDL_SetWindowShape(window.get(), uchanSurf.get(), &mode);
-  SDL_SetWindowHitTest(window.get(), HitTestCallback, nullptr);
+  setupWindow(window.get(), uchanSurf.get());
 
   /* main loop */
   Context ctx = {uchanTex};
