@@ -1,6 +1,7 @@
 #include "SDLlib.h"
 #include "display.h"
 #include "event.h"
+#include "pet.h"
 #include "render.h"
 #include "types.h"
 
@@ -36,7 +37,8 @@ int main(int argc, char *argv[]) {
 
   Rect screenSize = getCurrentScreenSize(0);
 
-  SDLSurface uchanSurf{"data/sprites/unitychan/Unitychan_Idle_1.png"};
+  Pet pet{"unity-chan", "data/sprites/unitychan/Unitychan_Idle_1.png"};
+  SDLSurface &uchanSurf = pet.getBaseSurface();
 
   const int width = uchanSurf.get()->w;
   const int height = uchanSurf.get()->h;
