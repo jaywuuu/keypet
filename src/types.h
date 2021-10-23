@@ -14,6 +14,7 @@ struct Rect {
 
 struct Context {
   SDLTexture &pet;
+  bool flip;
 };
 
 } // namespace KeyPet

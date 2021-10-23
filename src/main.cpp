@@ -55,6 +55,8 @@ int main(int argc, char *argv[]) {
 
   /* main loop */
   Context ctx = {uchanTex};
+  ctx.flip = false;
+
   bool loop = true;
   while (loop) {
 
