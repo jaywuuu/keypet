@@ -3,7 +3,9 @@
 
 #include "SDLlib.h"
 
+#include <memory>
 #include <string>
+
 
 namespace KeyPet {
 
@@ -15,9 +17,12 @@ public:
   Pet &operator=(const Pet &) = delete; // delete copy assignment
 
   SDLSurface &getBaseSurface();
+  SDLTexture *createBaseTexture(SDL_Renderer *renderer);
+  SDLTexture *getBaseTexture();
 
 private:
   SDLSurface BaseSurface;
+  std::unique_ptr<SDLTexture> BaseTexture;
   int Speed;
   std::string Name;
 };

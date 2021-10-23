@@ -34,8 +34,9 @@ target_link_libraries( ${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories( ${PROJECT_NAME} PUBLIC
-    ${SDL_INCLUDE_DIR}
-    external/SDL_image
+    ${SDL_INCLUDE_DIR},
+    external/SDL_image,
+    external/include
 )
 
 if (WIN32)

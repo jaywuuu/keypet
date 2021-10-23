@@ -49,12 +49,12 @@ int main(int argc, char *argv[]) {
   SDLShapedWindow window{AppName, x, y, width, height, winFlags};
   SDLRenderer renderer{window.get(), -1, SDL_RENDERER_ACCELERATED};
 
-  SDLTexture uchanTex{renderer.get(), uchanSurf.get()};
-
   setupWindow(window.get(), uchanSurf.get());
 
+  pet.createBaseTexture(renderer.get());
+
   /* main loop */
-  Context ctx = {uchanTex};
+  Context ctx = {pet};
   ctx.flip = false;
 
   bool loop = true;

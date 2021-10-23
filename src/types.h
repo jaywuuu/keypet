@@ -1,7 +1,9 @@
 #ifndef __types_h__
 #define __types_h__
 
+#include "Pet.h"
 #include "SDLlib.h"
+
 
 namespace KeyPet {
 
@@ -13,7 +15,7 @@ struct Rect {
 };
 
 struct Context {
-  SDLTexture &pet;
+  Pet &pet;
   bool flip;
 };
 
