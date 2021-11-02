@@ -4,7 +4,6 @@
 #include "Pet.h"
 #include "SDLlib.h"
 
-
 namespace KeyPet {
 
 struct Rect {

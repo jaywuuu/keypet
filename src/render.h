@@ -8,6 +8,7 @@ namespace KeyPet {
 
 void render(Context &context, SDLRenderer &renderer);
 void present(SDLRenderer &renderer);
+void clear(SDLRenderer &renderer);
 
 } // namespace KeyPet
 

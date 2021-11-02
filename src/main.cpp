@@ -1,4 +1,5 @@
 #include "SDLlib.h"
+#include "assets.h"
 #include "display.h"
 #include "event.h"
 #include "pet.h"
@@ -46,12 +47,15 @@ int main(int argc, char *argv[]) {
   const int y = (screenSize.height - height) / 2;
 
   uint32_t winFlags = (SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
-  SDLShapedWindow window{AppName, x, y, width, height, winFlags};
+  SDLWindow window{AppName, x, y, width, height, winFlags};
   SDLRenderer renderer{window.get(), -1, SDL_RENDERER_ACCELERATED};
 
   setupWindow(window.get(), uchanSurf.get());
 
   pet.createBaseTexture(renderer.get());
+
+  /* load main assets */
+  loadAssets(renderer.get(), pet, "data/sprites/unitychan/unitychan.json");
 
   /* main loop */
   Context ctx = {pet};
@@ -59,6 +63,7 @@ int main(int argc, char *argv[]) {
 
   bool loop = true;
   while (loop) {
+    clear(renderer);
 
     render(ctx, renderer);
 
@@ -68,7 +73,7 @@ int main(int argc, char *argv[]) {
 
     present(renderer);
 
-    SDL_Delay(16); // assume 60 fps
+    SDL_Delay(128); // assume 60 fps
   }
 
   return 0;
